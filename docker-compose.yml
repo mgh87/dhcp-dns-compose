@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  bind:
+    image: sameersbn/bind 
+    container_name: "bind"
+    ports:
+      - "192.168.144.144:10000:10000/tcp"
+      - "192.168.144.144:53:53"
+    networks:
+      - local
+    volumes:
+      - /docker/bind/data:/data
+    restart: always
+    environment:
+      - ROOT_PASSWORD=SecretPassword
+  iscdhcp:
+    image: networkboot/dhcpd
+    container_name: "isc-dhcp"
+    network_mode: host
+    volumes:
+      - /docker/isc-dhcp/data:/data
+    restart: always
+#network adapter to launch
+    command: enp3s0
+
+networks:
+  local:
+    driver: bridge
